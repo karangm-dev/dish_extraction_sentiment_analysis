@@ -33,7 +33,7 @@ class DishSentimentAnalysisApp:
             print(review_id)
             review = Preprocessing.preprocess_review_text(review)
 
-            # Check the grammarticality scores
+            # Check the grammaticality scores
             readability_dict = GrammarScore.get_scores(review)
 
             # Coreference resolution of the original text
