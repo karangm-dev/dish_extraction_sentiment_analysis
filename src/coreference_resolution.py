@@ -3,7 +3,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 import spacy
-nlp = spacy.load("en")
+nlp = spacy.load("en_core_web_sm")
 
 # Add neural coref to SpaCy's pipe
 import neuralcoref
