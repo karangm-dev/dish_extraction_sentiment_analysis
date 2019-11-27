@@ -40,7 +40,7 @@ class DishSentimentAnalysisApp:
             resolved_review = CoreferenceResolution.run(review)
 
             # Divide text into sentences
-            sentence_tokens = SentenceTokenization.get_sentence_tokens(review, 'spacy')
+            sentence_tokens = SentenceTokenization.get_sentence_tokens(resolved_review, 'spacy')
 
             # Create dish buckets and assign valid sentences to dish
             predicted_truth_dish_sentiment_dict = {}
@@ -82,6 +82,7 @@ class DishSentimentAnalysisApp:
 
             temp_review_dict = {
                 'text': review,
+                'readability_scores': readability_dict,
                 'golden_truth': golden_truth_dish_sentiment_dict,
                 'predicted_truth': predicted_truth_dish_sentiment_dict,
                 'sentences': sentence_analysis_list
