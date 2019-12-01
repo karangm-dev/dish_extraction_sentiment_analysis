@@ -2,9 +2,9 @@ import csv
 import pickle
 import pprint
 import numpy as np
+from fractions import Fraction
 
 pp = pprint.PrettyPrinter(width=200, compact=True)
-
 
 class Evaluation:
 
@@ -30,12 +30,18 @@ class Evaluation:
             SMOGIndex_score = []
             dish_extraction_recall = []
             sentiment_extraction_recall = []
+            #no_fall_positives=[]
+            #dish_extraction_precision=[]
             # Extracting ground truth dishnames
             for k in evaluation_dict[key]['golden_truth'].keys():
-                actual_dishname.append(k)
+                actual_dishname.append(k.strip('\"'))
             # Extracting ground truth sentiments
             for k in evaluation_dict[key]['golden_truth'].values():
                 actual_sentiment.append(k['sentiment'])
+            # Extracting false positives for dishnames
+            # for k in evaluation_dict[key]['predicted_truth']['UNK']['False Positives']:
+            #     no_fall_positives=len(k)
+
             #Extracting predicted truth for dishnames and sentiments
             for i, k in evaluation_dict[key]['predicted_truth'].items():
                 #Just look at length 3 for found key
@@ -45,8 +51,6 @@ class Evaluation:
                         predicted_sentiment.append(k['sentiment'])
                     else:
                         predicted_sentiment.append(k['sentiment'])
-                else:
-                    predicted_sentiment.append(k['sentiment'])
             # Rounding up the floating sentiment values , +1 for sentiment >0, -1 for sentiment <0 and nan for sentiment with value -100
             for i in predicted_sentiment:
                 if i == -100:
@@ -68,6 +72,9 @@ class Evaluation:
 
             #Calculation dish extraction recall
             dish_extraction_recall.append(len(predicted_dishname) / len(actual_dishname))
+
+            # #Calculation dish extraction precision
+            # dish_extraction_precision.append(len(predicted_dishname) / (len(actual_dishname)+no_fall_positives))
 
             #Calculating sentiment extraction recall
             count = 0
@@ -97,6 +104,7 @@ class Evaluation:
                 'SMOGIndex': ','.join(map(str, SMOGIndex_score)),
                 'Dish extraction recall': ','.join(map(str, dish_extraction_recall)),
                 'Sentiment extraction recall': ','.join(map(str, sentiment_extraction_recall))
+                #'Dish extraction precision': ','.join(map(str, dish_extraction_precision))
             }
             # Appending for different review IDs
             final_dictionary_list.append(temp_review_dict)
@@ -117,4 +125,16 @@ class Evaluation:
             dict_writer.writeheader()
             dict_writer.writerows(final_dictionary_list)
 
-Evaluation.run('../output/test_sample.p')
+#Evaluation.run('../output/test_sample.p')
+Evaluation.run('../output/test_2.p')
+Evaluation.run('../output/test_3.p')
+Evaluation.run('../output/test_4.p')
+Evaluation.run('../output/test_5.p')
+Evaluation.run('../output/test_6.p')
+Evaluation.run('../output/test_7.p')
+Evaluation.run('../output/test_8.p')
+Evaluation.run('../output/test_9.p')
+Evaluation.run('../output/test_11.p')
+Evaluation.run('../output/test_12.p')
+Evaluation.run('../output/test_14.p')
+Evaluation.run('../output/test_15.p')

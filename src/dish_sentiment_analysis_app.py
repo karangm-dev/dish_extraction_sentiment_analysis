@@ -6,6 +6,7 @@ from sentiment_analysis import SentimentAnalysis
 from sentence_tokenization import SentenceTokenization
 from factory import Factory
 import pickle
+import time
 
 import pprint
 pp = pprint.PrettyPrinter(width=200, compact=True)
@@ -51,19 +52,26 @@ class DishSentimentAnalysisApp:
 
             # Feed line by line to the client to detect dish names
             sentence_analysis_list = []
+            #Initialize false positive list
             for sentence in sentence_tokens:
-                intent, dish_names = Factory.sclient.detect_intent_for_text(sentence)
-                sentence_analysis_list.append((sentence, intent, dish_names))
-                if intent == 'Default Fallback Intent':
-                    predicted_truth_dish_sentiment_dict['UNK']['sentences'].append(sentence)
-                elif (intent == 'menu_item_identification_intent') & (len(dish_names) == 0):
-                    predicted_truth_dish_sentiment_dict['UNK']['sentences'].append(sentence)
-                else:
-                    for dish in dish_names:
-                        if dish in predicted_truth_dish_sentiment_dict:
-                            predicted_truth_dish_sentiment_dict[dish]['found'] = True
-                            predicted_truth_dish_sentiment_dict[dish]['sentences'].append(sentence)
-
+                try:
+                    intent, dish_names = Factory.sclient.detect_intent_for_text(sentence)
+                    sentence_analysis_list.append((sentence, intent, dish_names))
+                    if intent == 'Default Fallback Intent':
+                        predicted_truth_dish_sentiment_dict['UNK']['sentences'].append(sentence)
+                    elif (intent == 'menu_item_identification_intent') & (len(dish_names) == 0):
+                        predicted_truth_dish_sentiment_dict['UNK']['sentences'].append(sentence)
+                    else:
+                        for dish in dish_names:
+                            if dish in predicted_truth_dish_sentiment_dict:
+                                predicted_truth_dish_sentiment_dict[dish]['found'] = True
+                                predicted_truth_dish_sentiment_dict[dish]['sentences'].append(sentence)
+                            #else add to false positive
+                    time.sleep(1)
+                except:
+                    print("An exception occured")
+                    continue
+            # predicted_truth_dish_sentiment_dict['UNK']['FP']=false positive list
             # Get the sentiment of each dish
             for dish in predicted_truth_dish_sentiment_dict.keys():
                 if dish == 'UNK':
@@ -93,9 +101,22 @@ class DishSentimentAnalysisApp:
             # Save it in the dictionary
             result_dict[review_id] = temp_review_dict
 
+
         # Save the overall dictionary
         output_filepath = '../output/' + input_filepath[input_filepath.rfind('/')+1:input_filepath.rfind('.csv')] + '.p'
         with open(output_filepath, 'wb') as pickle_dump_file_pointer:
             pickle.dump(result_dict, pickle_dump_file_pointer, protocol=pickle.HIGHEST_PROTOCOL)
 
-DishSentimentAnalysisApp.run('../input/test/test_sample.csv')
+#DishSentimentAnalysisApp.run('../input/test/test_sample.csv')
+DishSentimentAnalysisApp.run('../input/test/test_2.csv')
+DishSentimentAnalysisApp.run('../input/test/test_3.csv')
+DishSentimentAnalysisApp.run('../input/test/test_4.csv')
+DishSentimentAnalysisApp.run('../input/test/test_5.csv')
+DishSentimentAnalysisApp.run('../input/test/test_6.csv')
+DishSentimentAnalysisApp.run('../input/test/test_7.csv')
+DishSentimentAnalysisApp.run('../input/test/test_8.csv')
+DishSentimentAnalysisApp.run('../input/test/test_9.csv')
+DishSentimentAnalysisApp.run('../input/test/test_11.csv')
+DishSentimentAnalysisApp.run('../input/test/test_12.csv')
+DishSentimentAnalysisApp.run('../input/test/test_14.csv')
+DishSentimentAnalysisApp.run('../input/test/test_15.csv')

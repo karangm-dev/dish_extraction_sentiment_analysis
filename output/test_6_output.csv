@@ -1,0 +1,2 @@
+Review ID,Actual Dishname,Actual Sentiment,Predicted Dishname,Predicted Sentiment,Categorical Predicted Sentiment ,ARI,Coleman-Liau,DaleChallIndex,FleschReadingEase,GunningFogIndex,Kincaid,LIX,RIX,SMOGIndex,Dish extraction recall,Sentiment extraction recall
+Xr989aRwbPQg4blVG7ZsUw,"WARM CRAB & ARTICHOKE DIP,ALMOND-CRUSTED SALMON SALAD","1,1",,"-100,-100","nan,nan",59.24521008403361,10.385187638655466,13.519572268907563,-33.385294117647035,52.305882352941175,47.47882352941177,140.00840336134453,25.0,23.493901531919196,0.0,0.0
