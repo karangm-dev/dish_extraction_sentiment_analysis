@@ -51,6 +51,7 @@ class DishSentimentAnalysisApp:
 
             # Feed line by line to the client to detect dish names
             sentence_analysis_list = []
+            false_positive_list = []
             for sentence in sentence_tokens:
                 intent, dish_names = Factory.sclient.detect_intent_for_text(sentence)
                 sentence_analysis_list.append((sentence, intent, dish_names))
@@ -63,6 +64,10 @@ class DishSentimentAnalysisApp:
                         if dish in predicted_truth_dish_sentiment_dict:
                             predicted_truth_dish_sentiment_dict[dish]['found'] = True
                             predicted_truth_dish_sentiment_dict[dish]['sentences'].append(sentence)
+                        else:
+                            false_positive_list.append(dish)
+
+            predicted_truth_dish_sentiment_dict['UNK']['False Positives'] = false_positive_list
 
             # Get the sentiment of each dish
             for dish in predicted_truth_dish_sentiment_dict.keys():
@@ -88,10 +93,12 @@ class DishSentimentAnalysisApp:
                 'sentences': sentence_analysis_list
             }
 
-            # pp.pprint(temp_review_dict)
+            pp.pprint(temp_review_dict)
 
             # Save it in the dictionary
             result_dict[review_id] = temp_review_dict
+
+
 
         # Save the overall dictionary
         output_filepath = '../output/' + input_filepath[input_filepath.rfind('/')+1:input_filepath.rfind('.csv')] + '.p'
