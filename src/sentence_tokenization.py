@@ -1,6 +1,6 @@
 from nltk.tokenize import sent_tokenize
 import spacy
-nlp = spacy.load("en")
+nlp = spacy.load("en_core_web_sm")
 
 class SentenceTokenization:
 
