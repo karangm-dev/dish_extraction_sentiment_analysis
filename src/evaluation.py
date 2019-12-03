@@ -30,35 +30,49 @@ class Evaluation:
             SMOGIndex_score = []
             dish_extraction_recall = []
             sentiment_extraction_recall = []
-            #no_fall_positives=[]
-            #dish_extraction_precision=[]
+            no_fall_positives=0
+            dish_extraction_precision=[]
+
             # Extracting ground truth dishnames
             for k in evaluation_dict[key]['golden_truth'].keys():
                 actual_dishname.append(k.strip('\"'))
             # Extracting ground truth sentiments
             for k in evaluation_dict[key]['golden_truth'].values():
                 actual_sentiment.append(k['sentiment'])
+
             # Extracting false positives for dishnames
-            # for k in evaluation_dict[key]['predicted_truth']['UNK']['False Positives']:
-            #     no_fall_positives=len(k)
+            no_fall_positives = len(set(evaluation_dict[key]['predicted_truth']['UNK']['False Positives']))
 
             #Extracting predicted truth for dishnames and sentiments
             for i, k in evaluation_dict[key]['predicted_truth'].items():
+                if i == "UNK":
+                    continue
                 #Just look at length 3 for found key
-                if len(k) == 3:
-                    if k['found']:
-                        predicted_dishname.append(i)
-                        predicted_sentiment.append(k['sentiment'])
-                    else:
-                        predicted_sentiment.append(k['sentiment'])
+                if k['found']:
+                    predicted_dishname.append(i)
+                    predicted_sentiment.append(k['sentiment'])
+                else:
+                    predicted_sentiment.append(k['sentiment'])
+
             # Rounding up the floating sentiment values , +1 for sentiment >0, -1 for sentiment <0 and nan for sentiment with value -100
+            # for i in predicted_sentiment:
+            #     if i == -100:
+            #         final_predicted_sentiment.append(np.nan)
+            #     if i < 0 and i != -100:
+            #         final_predicted_sentiment.append(-1)
+            #     if i >= 0:
+            #         final_predicted_sentiment.append(1)
+
             for i in predicted_sentiment:
                 if i == -100:
                     final_predicted_sentiment.append(np.nan)
-                if i < 0 and i != -100:
-                    final_predicted_sentiment.append(-1)
-                if i >= 0:
+                if i == 'positive':
                     final_predicted_sentiment.append(1)
+                if i == 'negative':
+                    final_predicted_sentiment.append(-1)
+                if i == 'neutral':
+                    final_predicted_sentiment.append(0)
+
             # Forming seperate lists for all readability scores
             ARI_score.append(evaluation_dict[key]['readability_scores']['ARI'])
             Coleman_Liu_score.append(evaluation_dict[key]['readability_scores']['Coleman-Liau'])
@@ -73,8 +87,8 @@ class Evaluation:
             #Calculation dish extraction recall
             dish_extraction_recall.append(len(predicted_dishname) / len(actual_dishname))
 
-            # #Calculation dish extraction precision
-            # dish_extraction_precision.append(len(predicted_dishname) / (len(actual_dishname)+no_fall_positives))
+            #Calculation dish extraction precision
+            dish_extraction_precision.append(len(predicted_dishname) / (len(actual_dishname)+no_fall_positives))
 
             #Calculating sentiment extraction recall
             count = 0
@@ -103,8 +117,8 @@ class Evaluation:
                 'RIX': ','.join(map(str, RIX_score)),
                 'SMOGIndex': ','.join(map(str, SMOGIndex_score)),
                 'Dish extraction recall': ','.join(map(str, dish_extraction_recall)),
-                'Sentiment extraction recall': ','.join(map(str, sentiment_extraction_recall))
-                #'Dish extraction precision': ','.join(map(str, dish_extraction_precision))
+                'Sentiment extraction recall': ','.join(map(str, sentiment_extraction_recall)),
+                'Dish extraction precision': ','.join(map(str, dish_extraction_precision))
             }
             # Appending for different review IDs
             final_dictionary_list.append(temp_review_dict)
@@ -125,7 +139,6 @@ class Evaluation:
             dict_writer.writeheader()
             dict_writer.writerows(final_dictionary_list)
 
-#Evaluation.run('../output/test_sample.p')
 Evaluation.run('../output/test_2.p')
 Evaluation.run('../output/test_3.p')
 Evaluation.run('../output/test_4.p')

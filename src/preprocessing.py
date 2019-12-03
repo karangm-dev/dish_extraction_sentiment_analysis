@@ -32,6 +32,7 @@ class Preprocessing:
         for dish_sentiment in golden_truth_text_lines:
             dish_sentiment = dish_sentiment.split(',')
             dish = dish_sentiment[0].strip()
+            dish=dish.strip('\"')
             sentiment = None
             if len(dish_sentiment) == 1:
                 # This is a candidate for sentiment being neutral

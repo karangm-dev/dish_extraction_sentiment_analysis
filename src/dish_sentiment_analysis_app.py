@@ -52,6 +52,7 @@ class DishSentimentAnalysisApp:
 
             # Feed line by line to the client to detect dish names
             sentence_analysis_list = []
+            false_positive_list = []
             #Initialize false positive list
             for sentence in sentence_tokens:
                 try:
@@ -66,12 +67,15 @@ class DishSentimentAnalysisApp:
                             if dish in predicted_truth_dish_sentiment_dict:
                                 predicted_truth_dish_sentiment_dict[dish]['found'] = True
                                 predicted_truth_dish_sentiment_dict[dish]['sentences'].append(sentence)
-                            #else add to false positive
+                            else:
+                                false_positive_list.append(dish)
                     time.sleep(1)
-                except:
-                    print("An exception occured")
+                except Exception as e:
+                    print(e)
                     continue
-            # predicted_truth_dish_sentiment_dict['UNK']['FP']=false positive list
+
+            predicted_truth_dish_sentiment_dict['UNK']['False Positives'] = false_positive_list
+
             # Get the sentiment of each dish
             for dish in predicted_truth_dish_sentiment_dict.keys():
                 if dish == 'UNK':
@@ -86,7 +90,7 @@ class DishSentimentAnalysisApp:
                             sentiment_text = ""
                             for sentence in predicted_truth_dish_sentiment_dict[dish]['sentences']:
                                 sentiment_text = sentiment_text + sentence
-                            predicted_truth_dish_sentiment_dict[dish]['sentiment'] = SentimentAnalysis.run(sentiment_text)
+                            predicted_truth_dish_sentiment_dict[dish]['sentiment'] = SentimentAnalysis.run(sentiment_text,lib='paralleldot')
 
             temp_review_dict = {
                 'text': review,
@@ -96,18 +100,17 @@ class DishSentimentAnalysisApp:
                 'sentences': sentence_analysis_list
             }
 
-            # pp.pprint(temp_review_dict)
+            #pp.pprint(temp_review_dict)
 
             # Save it in the dictionary
             result_dict[review_id] = temp_review_dict
-
 
         # Save the overall dictionary
         output_filepath = '../output/' + input_filepath[input_filepath.rfind('/')+1:input_filepath.rfind('.csv')] + '.p'
         with open(output_filepath, 'wb') as pickle_dump_file_pointer:
             pickle.dump(result_dict, pickle_dump_file_pointer, protocol=pickle.HIGHEST_PROTOCOL)
 
-#DishSentimentAnalysisApp.run('../input/test/test_sample.csv')
+
 DishSentimentAnalysisApp.run('../input/test/test_2.csv')
 DishSentimentAnalysisApp.run('../input/test/test_3.csv')
 DishSentimentAnalysisApp.run('../input/test/test_4.csv')
