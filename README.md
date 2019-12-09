@@ -39,7 +39,7 @@ https://docs.google.com/spreadsheets/d/1Zuh1J9bwpPo2mobIuWQxMG38O9GgMl4mvfV_8j_L
 
 12. Run src/dish_sentiment_analysis_app.py to generate pickle files as output.
 
-13. Run src/evaluation.py to calculate precision and recall scores and gernerate visualizations.
+13. Run src/evaluation.py to calculate precision and recall scores and generate visualizations.
 
 
 
