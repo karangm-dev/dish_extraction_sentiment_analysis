@@ -35,11 +35,13 @@ https://docs.google.com/spreadsheets/d/1Zuh1J9bwpPo2mobIuWQxMG38O9GgMl4mvfV_8j_L
 
 10. Create an account in GCP and credential file as explained in https://cloud.google.com/dialogflow/docs/quick/setup. While creating service account, enable Dialogflow Admin & Dialogflow Client permissions. Download the credentials and set environment variable GOOGLE_APPLICATION_CREDENTIALS vartiable for the runner in Pycharm.
 
-11. Update the config.py for project id and session variable.
+11. Create a dialogflow agent and import from https://drive.google.com/file/d/1t_bVKtqw5FOYUOkmyG7zFqS2hgvJjYhJ/view?usp=sharing to populate.
 
-12. Run src/dish_sentiment_analysis_app.py to generate pickle files as output.
+12. Update the config.py for project id and session variable.
 
-13. Run src/evaluation.py to calculate precision and recall scores and generate visualizations.
+13. Run src/dish_sentiment_analysis_app.py to generate pickle files as output.
+
+14. Run src/evaluation.py to calculate precision and recall scores and generate visualizations.
 
 
 
